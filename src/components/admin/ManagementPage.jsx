@@ -45,7 +45,6 @@ export default function ManagementPage({ activeMenu, search, rooms: initialRooms
     }
   });
 
-  const [localRooms, setLocalRooms] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [loadingRooms, setLoadingRooms] = useState(false);
 

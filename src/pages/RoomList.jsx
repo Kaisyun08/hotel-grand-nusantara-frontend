@@ -119,6 +119,16 @@ export default function RoomList() {
                             Detail Kamar
                         </Link>
                     </div>
+                    {/* SEARCH BAR */}
+                    <div className="mt-6 max-w-md mx-auto">
+                        <input
+                            type="text"
+                            placeholder="Cari tipe kamar..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full px-4 py-3 rounded-xl text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-md"
+                        />
+                    </div>
 
                     {/* PROFIL / LOGIN */}
                     <div className="hidden items-center gap-4 md:flex">
@@ -195,17 +205,6 @@ export default function RoomList() {
                 <p className="mt-2 text-sm text-slate-300 max-w-xl mx-auto">
                     Temukan akomodasi terbaik yang dirancang untuk kenyamanan dan pengalaman istirahat istimewa Anda.
                 </p>
-
-                {/* SEARCH BAR */}
-                <div className="mt-6 max-w-md mx-auto">
-                    <input
-                        type="text"
-                        placeholder="Cari tipe kamar..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-md"
-                    />
-                </div>
             </div>
 
             {/* ROOM LIST GRID */}

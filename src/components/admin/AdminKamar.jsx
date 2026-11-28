@@ -34,11 +34,12 @@ export default function AdminKamar({
   // Helper Pemetaan Nama Tipe Kamar jika backend hanya mengirim ID
   const getTipeKamarName = (id) => {
     const types = {
-      1: "Suite Room",
-      2: "Superior Room",
-      3: "Deluxe Room",
-      4: "Executive Club",
-      5: "Presidential suite",
+      1: "Standard Room",
+      2: "Suite Room",
+      3: "Superior Room",
+      4: "Deluxe Room",
+      5: "Executive Club",
+      6: "Presidential suite",
     };
     return types[id] || "Superior Room";
   };

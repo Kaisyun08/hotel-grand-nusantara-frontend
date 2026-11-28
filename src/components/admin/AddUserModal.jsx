@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+  import React, { useState } from "react";
 import { X, UserPlus, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import CustomAlert from "../common/CustomAlert";
 
-const API_BASE = "http://10.7.7.155:3000/api";
+const API_BASE = "http://192.168.1.103:3000/api";
 
 export default function AddUserModal({ isOpen, onClose, onSuccess }) {
   const [loading, setLoading] = useState(false);

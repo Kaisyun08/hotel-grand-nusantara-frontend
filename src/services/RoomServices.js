@@ -1,5 +1,5 @@
 // Sesuaikan URL ini dengan port/rute backend Express milik temanmu
-const API_URL = 'http://10.7.7.155:3000/api/kamar';
+const API_URL = 'http://192.168.1.103:3000/api/kamar';
 
 export const RoomServices = {
   // 1. Ambil semua unit kamar (Untuk Admin Dashboard)

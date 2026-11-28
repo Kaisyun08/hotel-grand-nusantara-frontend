@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Printer, TrendingUp, Calendar, CheckCircle2, XCircle } from "lucide-react";
 
-const API_BASE = "http://10.7.7.155:3000/api";
+const API_BASE = "http://192.168.1.103:3000/api";
 
 export default function AdminLaporan({
   reportPeriod: periodProp,

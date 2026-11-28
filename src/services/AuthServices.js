@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://10.7.7.155:3000/api/auth'
+const API_BASE_URL = 'http://192.168.1.103:3000/api/auth'
 
 export const AuthServices = {
   // register untuk user
