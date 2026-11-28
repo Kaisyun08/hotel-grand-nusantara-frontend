@@ -28,11 +28,7 @@ export default function ProtectedRoute({ children, allowedRole = "admin" }) {
     user.isAdmin === true ||
     user.role === allowedRole;
 
-<<<<<<< HEAD
   // Jika bukan admin -> Redirect ke Beranda
-=======
-  // Jika bukan admin -> Redirect ke Home
->>>>>>> origin/master
   if (!isUserAdmin) {
     return <Navigate to="/" replace />;
   }
