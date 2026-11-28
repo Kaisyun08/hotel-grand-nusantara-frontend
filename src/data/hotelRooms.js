@@ -142,7 +142,7 @@ export const hotelRooms = {
   presidentialRoom: {
     tabLabel: 'Presidential Suite',
     name: 'The Royal Presidential Suite',
-    price: 15000000,
+    price: 5500000,
     rating: 5.0,
     reviewsCount: 32,
     description:

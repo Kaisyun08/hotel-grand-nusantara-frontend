@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import EditRoom from "./EditRoom";
 import CustomAlert from "../common/CustomAlert";
 import { Plus, Save, Pencil, Trash2 } from "lucide-react";
 import { RoomServices } from "../../services/RoomServices";
+import { BookingServices } from "../../services/BookingServices";
 
 export default function AdminKamar({
   rooms = [],
@@ -31,17 +32,73 @@ export default function AdminKamar({
     setAlertConfig({ isOpen: true, title, message, type });
   };
 
-  // Room Type Mapping Helper if backend only returns ID
+  // Sinkronisasi status kamar dengan tabel reservasi aktif (jika DB baru di-truncate)
+  useEffect(() => {
+    const syncRoomStatuses = async () => {
+      if (!rooms.length || !setRooms) return;
+      try {
+        const bookings = await BookingServices.getAllBookings();
+        const bookingList = Array.isArray(bookings) ? bookings : bookings?.data || [];
+
+        const activeRoomIds = new Set(
+          bookingList
+            .filter((b) =>
+              ["pending", "confirmed", "check_in"].includes(
+                String(b.status_reservasi || b.status || "").toLowerCase()
+              )
+            )
+            .map((b) => String(b.id_kamar))
+        );
+
+        let hasMismatch = false;
+        const synced = rooms.map((room) => {
+          const roomId = String(room.id_kamar || room.id);
+          const rawStatus = String(room.status || "available").toLowerCase();
+
+          if (["maintenance", "cleaning", "dibersihkan"].includes(rawStatus)) {
+            return room;
+          }
+
+          const shouldBeOccupied = activeRoomIds.has(roomId);
+          const isCurrentlyOccupied = ["occupied", "terisi"].includes(rawStatus);
+
+          if (!shouldBeOccupied && isCurrentlyOccupied) {
+            hasMismatch = true;
+            // Otomatis kembalikan status kamar sisa truncate ke 'available' di DB
+            RoomServices.updateRoom?.(roomId, { ...room, status: "available" }).catch(() => {});
+            return { ...room, status: "available" };
+          }
+
+          if (shouldBeOccupied && !isCurrentlyOccupied) {
+            hasMismatch = true;
+            return { ...room, status: "occupied" };
+          }
+
+          return room;
+        });
+
+        if (hasMismatch) {
+          setRooms(synced);
+        }
+      } catch (err) {
+        console.error("Failed to sync room statuses with bookings:", err);
+      }
+    };
+
+    syncRoomStatuses();
+  }, [rooms.length]);
+
+  // Room Type Mapping Helper (disamakan dengan RoomDetail.jsx)
   const getTipeKamarName = (id) => {
     const types = {
       1: "Standard Room",
-      2: "Suite Room",
-      3: "Superior Room",
-      4: "Deluxe Room",
-      5: "Executive Club",
+      2: "Superior Room",
+      3: "Deluxe Room",
+      4: "Executive Club",
+      5: "Suite Room",
       6: "Presidential Suite",
     };
-    return types[id] || "Superior Room";
+    return types[id] || "Standard Room";
   };
 
   // Add Room Handler
@@ -94,7 +151,6 @@ export default function AdminKamar({
         await RoomServices.updateRoom(roomId, updatedData);
       }
 
-      // Optimistic UI Update
       if (setRooms) {
         setRooms((prev) =>
           prev.map((r) => {
@@ -153,7 +209,6 @@ export default function AdminKamar({
     }
   };
 
-  // Merge mapped nama_tipe into each room object for search bar filtering
   const enrichedRooms = rooms.map((room) => ({
     ...room,
     nama_tipe: room.nama_tipe || getTipeKamarName(room.id_tipe_kamar),
@@ -226,11 +281,12 @@ export default function AdminKamar({
                   onChange={(e) => setRoomForm({ ...roomForm, typeId: e.target.value })}
                   className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none"
                 >
-                  <option value="1">Suite Room</option>
+                  <option value="1">Standard Room</option>
                   <option value="2">Superior Room</option>
                   <option value="3">Deluxe Room</option>
                   <option value="4">Executive Club</option>
-                  <option value="5">Presidential Suite</option>
+                  <option value="5">Suite Room</option>
+                  <option value="6">Presidential Suite</option>
                 </select>
               </div>
               <div className="flex items-end gap-2">
@@ -251,36 +307,36 @@ export default function AdminKamar({
             </form>
           )}
 
-          {/* ROOM STATISTICS SUMMARY */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {/* ROOM STATISTICS SUMMARY (4 Cards: Available, Occupied, Cleaning, Maintenance) */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
               {
                 label: "Available Rooms",
-                value: rooms.filter(
-                  (r) =>
-                    String(r.status).toLowerCase() === "available" ||
-                    String(r.status).toLowerCase() === "ready"
+                value: rooms.filter((r) =>
+                  ["available", "ready", "tersedia"].includes(String(r.status).toLowerCase())
                 ).length,
                 color: "text-emerald-600",
               },
               {
                 label: "Occupied Rooms",
-                value: rooms.filter(
-                  (r) =>
-                    String(r.status).toLowerCase() === "terisi" ||
-                    String(r.status).toLowerCase() === "occupied"
+                value: rooms.filter((r) =>
+                  ["occupied", "terisi"].includes(String(r.status).toLowerCase())
                 ).length,
                 color: "text-blue-600",
               },
               {
-                label: "Cleaning / Maintenance",
-                value: rooms.filter(
-                  (r) =>
-                    String(r.status).toLowerCase() === "maintenance" ||
-                    String(r.status).toLowerCase() === "cleaning" ||
-                    String(r.status).toLowerCase() === "dibersihkan"
+                label: "Cleaning",
+                value: rooms.filter((r) =>
+                  ["cleaning", "dibersihkan"].includes(String(r.status).toLowerCase())
                 ).length,
                 color: "text-amber-600",
+              },
+              {
+                label: "Maintenance",
+                value: rooms.filter(
+                  (r) => String(r.status).toLowerCase() === "maintenance"
+                ).length,
+                color: "text-red-600",
               },
             ].map((item) => (
               <div key={item.label} className="rounded-xl border border-slate-200 p-4">

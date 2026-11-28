@@ -95,21 +95,21 @@ function Beranda() {
           <div className="overflow-hidden rounded-2xl bg-white shadow-md transition hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between">
             <div>
               <img
-                src="https://images.unsplash.com/photo-1611892440504-42a792e24d32"
+                src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80"
                 alt="Deluxe Room"
                 className="h-48 w-full object-cover"
               />
               <div className="p-6 space-y-3">
                 <h3 className="text-xl font-bold text-gray-800">Deluxe Room</h3>
                 <p className="text-xs text-gray-500 line-clamp-2">
-                  A spacious room with a king-size bed, a view of the pool, and modern amenities.
+                  Offers more spacious accommodations with an extra touch of luxury and a direct view of the pool from the room.
                 </p>
               </div>
             </div>
             <div className="px-6 pb-6 pt-2 flex items-center justify-between">
               <div>
                 <span className="text-lg font-bold text-blue-600">Rp 1.800.000</span>
-                <span className="text-xs text-gray-400"> /malam</span>
+                <span className="text-xs text-gray-400"> /night</span>
               </div>
               <button
                 onClick={() => handleBookNow("deluxeRoom")}
@@ -124,14 +124,14 @@ function Beranda() {
           <div className="overflow-hidden rounded-2xl bg-white shadow-md transition hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between">
             <div>
               <img
-                src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b"
+                src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80"
                 alt="Executive Suite"
                 className="h-48 w-full object-cover"
               />
               <div className="p-6 space-y-3">
                 <h3 className="text-xl font-bold text-gray-800">Executive Club</h3>
                 <p className="text-xs text-gray-500 line-clamp-2">
-                  These luxurious suites feature a separate living room, a bathtub, and access to the executive lounge.
+                  Designed specifically for executives and high-end travelers, complete with access to an exclusive lounge.
                 </p>
               </div>
             </div>
@@ -153,20 +153,20 @@ function Beranda() {
           <div className="overflow-hidden rounded-2xl bg-white shadow-md transition hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between">
             <div>
               <img
-                src="https://images.unsplash.com/photo-1590490360182-c33d57733427"
+                src="https://images.unsplash.com/photo-1631049035182-249067d7618e?w=1200&q=80"
                 alt="Presidential Suite"
                 className="h-48 w-full object-cover"
               />
               <div className="p-6 space-y-3">
                 <h3 className="text-xl font-bold text-gray-800">Presidential Suite</h3>
                 <p className="text-xs text-gray-500 line-clamp-2">
-                  The most exclusive stay, featuring a private jacuzzi and 24-hour service.
+                  The pinnacle of luxury and privacy, featuring a dining room, a workspace, and personal services.
                 </p>
               </div>
             </div>
             <div className="px-6 pb-6 pt-2 flex items-center justify-between">
               <div>
-                <span className="text-lg font-bold text-blue-600">Rp 15.000.000</span>
+                <span className="text-lg font-bold text-blue-600">Rp 5.500.000</span>
                 <span className="text-xs text-gray-400"> /night</span>
               </div>
               <button

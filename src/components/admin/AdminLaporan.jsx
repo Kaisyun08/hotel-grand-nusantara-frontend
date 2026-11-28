@@ -266,6 +266,7 @@ export default function AdminLaporan({
               <th className="px-4 py-3">RESERVATION ID</th>
               <th className="px-4 py-3">GUEST NAME</th>
               <th className="px-4 py-3">ROOM</th>
+              <th className="px-4 py-3">ROOM NO.</th>
               <th className="px-4 py-3">TOTAL AMOUNT</th>
               <th className="px-4 py-3">VERIFICATION STATUS</th>
             </tr>
@@ -273,13 +274,13 @@ export default function AdminLaporan({
           <tbody className="divide-y divide-slate-100">
             {loading && computedFilteredReservations.length === 0 ? (
               <tr>
-                <td colSpan="5" className="px-4 py-6 text-center text-xs text-slate-400">
+                <td colSpan="6" className="px-4 py-6 text-center text-xs text-slate-400">
                   Loading report data from the server...
                 </td>
               </tr>
             ) : computedFilteredReservations.length === 0 ? (
               <tr>
-                <td colSpan="5" className="px-4 py-6 text-center text-xs text-slate-400">
+                <td colSpan="6" className="px-4 py-6 text-center text-xs text-slate-400">
                   There are no reservation records for this period.
                 </td>
               </tr>
@@ -288,10 +289,11 @@ export default function AdminLaporan({
                 const resId = item.id_reservasi || item.id;
                 const guest =
                   item.nama_lengkap || item.nama_tamu || `Guest #${item.id_tamu || ""}`;
-                const roomInfo = item.nomor_kamar
-                  ? `${item.nama_tipe || "Room"} (${item.nomor_kamar})`
+                const roomType = item.nama_tipe || item.tipe_kamar || "Room";
+                const roomNumber = item.nomor_kamar
+                  ? item.nomor_kamar
                   : item.id_kamar
-                    ? `Room #${item.id_kamar}`
+                    ? `#${item.id_kamar}`
                     : "-";
                 const statusVerif =
                   item.status_verifikasi || item.status_pembayaran || "pending";
@@ -300,19 +302,19 @@ export default function AdminLaporan({
                   <tr key={resId} className="hover:bg-slate-50">
                     <td className="px-4 py-3 font-semibold text-blue-600">#{resId}</td>
                     <td className="px-4 py-3 font-medium text-slate-800">{guest}</td>
-                    <td className="px-4 py-3">{roomInfo}</td>
+                    <td className="px-4 py-3 capitalize">{roomType}</td>
+                    <td className="px-4 py-3 font-semibold text-slate-900">{roomNumber}</td>
                     <td className="px-4 py-3 font-semibold text-slate-900">
                       {renderRupiah(item.total_biaya || item.total_harga || 0)}
                     </td>
                     <td className="px-4 py-3">
                       <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
-                          ["verified", "lunas", "terverifikasi"].includes(
-                            String(statusVerif).toLowerCase()
-                          )
+                        className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${["verified", "lunas", "terverifikasi"].includes(
+                          String(statusVerif).toLowerCase()
+                        )
                             ? "bg-emerald-50 text-emerald-600"
                             : "bg-amber-50 text-amber-600"
-                        }`}
+                          }`}
                       >
                         {statusVerif}
                       </span>
