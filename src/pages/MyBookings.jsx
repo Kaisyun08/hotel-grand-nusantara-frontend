@@ -133,11 +133,7 @@ export default function MyBookings() {
           {/* MENU DESKTOP */}
           <div className="hidden gap-8 text-sm font-semibold text-gray-600 md:flex">
             <Link to="/" className="transition hover:text-blue-600">
-<<<<<<< HEAD
-              Beranda
-=======
               Home
->>>>>>> origin/master
             </Link>
             <Link to="/room-list" className="text-blue-600 font-bold transition hover:text-blue-700">
               Kamar
@@ -152,7 +148,7 @@ export default function MyBookings() {
             {user ? (
               <>
                 <Link to="/my-bookings" className="text-sm font-semibold text-gray-600 hover:text-blue-600">
-                  Pesanan Saya
+                  My Booking
                 </Link>
                 <span className="text-sm font-medium text-gray-600">
                   Halo, <strong className="capitalize text-gray-900">{user.nama || user.name || 'Tamu'}</strong>
@@ -189,11 +185,7 @@ export default function MyBookings() {
         {mobileMenuOpen && (
           <div className="border-b border-gray-100 bg-white px-6 py-4 space-y-4 md:hidden shadow-lg">
             <div className="flex flex-col space-y-3 text-sm font-semibold text-gray-600">
-<<<<<<< HEAD
-              <Link to="/" className="transition hover:text-blue-600">Beranda</Link>
-=======
               <Link to="/" className="transition hover:text-blue-600">Home</Link>
->>>>>>> origin/master
               <Link to="/room-list" className="text-blue-600">Kamar</Link>
               <Link to="/room-detail" className="transition hover:text-blue-600">Detail Kamar</Link>
             </div>

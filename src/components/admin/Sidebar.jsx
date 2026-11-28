@@ -1,10 +1,8 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Hotel,
   X,
   Settings,
-  Sparkles,
   UserPlus,
   MoreHorizontal,
 } from "lucide-react";
@@ -18,8 +16,8 @@ export default function Sidebar({
   setActiveMenu,
   user,
 }) {
-
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+
   const getInitials = (name) => {
     if (!name) return "AD";
     const words = name.trim().split(" ");
@@ -32,11 +30,12 @@ export default function Sidebar({
   return (
     <>
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex h-screen w-64 flex-col border-r border-slate-200 bg-white transition-transform lg:sticky lg:top-0 lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+        className={`fixed inset-y-0 left-0 z-40 flex h-screen w-64 flex-col border-r border-slate-200 bg-white transition-transform lg:sticky lg:top-0 lg:translate-x-0 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
-        {/* HEADER LOGO (Tetap Diam di Atas) */}
-        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5 shrink-0">
+        {/* HEADER LOGO (Fixed at Top) */}
+        <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-6 py-5">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-500/20">
               <Hotel size={22} />
@@ -59,10 +58,10 @@ export default function Sidebar({
           </button>
         </div>
 
-        {/* AREA MENU UTAMA */}
+        {/* MAIN MENU AREA */}
         <div className="flex-1 overflow-y-auto">
-          <div className="px-6 pt-5 text-[11px] font-bold tracking-wider uppercase text-slate-400">
-            MENU UTAMA
+          <div className="px-6 pt-5 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            MAIN MENU
           </div>
 
           <nav className="space-y-1 p-4">
@@ -73,10 +72,11 @@ export default function Sidebar({
               return (
                 <button
                   key={item.name}
-                  className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-xs font-semibold transition ${isSelected
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                    }`}
+                  className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-xs font-semibold transition ${
+                    isSelected
+                      ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`}
                   onClick={() => {
                     setActiveMenu(item.name);
                     setSidebarOpen(false);
@@ -91,47 +91,48 @@ export default function Sidebar({
             })}
           </nav>
 
-          <div className="px-6 pt-3 text-[11px] font-bold tracking-wider uppercase text-slate-400">
-            PREFERENSI
+          <div className="px-6 pt-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            PREFERENCES
           </div>
 
           <div className="p-4">
             <button
-              className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-xs font-semibold transition ${activeMenu === "Pengaturan"
-                ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
+              className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-xs font-semibold transition ${
+                activeMenu === "Settings"
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              }`}
               onClick={() => {
-                setActiveMenu("Pengaturan");
+                setActiveMenu("Settings");
                 setSidebarOpen(false);
               }}
             >
               <Settings size={18} />
-              <span>Pengaturan</span>
+              <span>Settings</span>
             </button>
           </div>
         </div>
 
-        {/* Untuk Menambahkan Akun Admin */}
+        {/* ACCOUNT MANAGEMENT (Add Admin Account) */}
         <div className="px-4 py-3">
           <p className="mb-2 px-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            MANAJEMEN AKUN
+            ACCOUNT MANAGEMENT
           </p>
           <button
             type="button"
             onClick={() => {
               setIsAddUserOpen(true);
-              if (setSidebarOpen) setSidebarOpen(false); // Tutup drawer jika dibuka di HP
+              if (setSidebarOpen) setSidebarOpen(false);
             }}
             className="flex w-full items-center gap-3 rounded-xl bg-blue-50 px-3.5 py-2.5 text-xs font-semibold text-blue-600 transition hover:bg-blue-600 hover:text-white"
           >
             <UserPlus size={18} />
-            <span>Tambah Admin</span>
+            <span>Add Admin</span>
           </button>
         </div>
 
         {/* FOOTER & PROFILE */}
-        <div className="mt-auto space-y-4 p-4 shrink-0 border-t border-slate-100">
+        <div className="mt-auto shrink-0 space-y-4 border-t border-slate-100 p-4">
           <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-slate-50 p-2.5">
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-xs font-bold uppercase text-white">
@@ -150,11 +151,12 @@ export default function Sidebar({
           </div>
         </div>
       </aside>
+
       <AddUserModal
         isOpen={isAddUserOpen}
         onClose={() => setIsAddUserOpen(false)}
         onSuccess={() => {
-          // Opsional: tindakan setelah akun berhasil ditambahkan
+          // Optional: action after admin account is created
         }}
       />
     </>

@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import {
   BedDouble,
   Clock,
-  CheckCircle2,
-  Wrench,
-  Sparkles,
   ArrowLeft,
   Save,
 } from "lucide-react";
@@ -16,13 +13,19 @@ const getLocalDateTimeValue = () => {
 };
 
 export default function EditRoom({ room, onSave, onCancel }) {
-  // Helper Pemetaan Tipe Kamar
+  // Room Type Mapping Helper
   const getTipeKamarName = (id) => {
-    const types = { 1: "Suite Room", 2: "Superior Room", 3: "Deluxe Room", 4: "Executive Club", 5: "Presidential Suite" };
+    const types = {
+      1: "Suite Room",
+      2: "Superior Room",
+      3: "Deluxe Room",
+      4: "Executive Club",
+      5: "Presidential Suite",
+    };
     return types[id] || "Superior Room";
   };
 
-  // 1. DUKUNG FIELD DARI MYSQL (nomor_kamar, status, id_tipe_kamar)
+  // Support MySQL fields (nomor_kamar, status, id_tipe_kamar)
   const [form, setForm] = useState({
     id: room?.id_kamar || room?.id || "",
     number: room?.nomor_kamar || room?.number || "101",
@@ -57,7 +60,7 @@ export default function EditRoom({ room, onSave, onCancel }) {
   const estimatedCompletion = () => {
     const finish = getEstimatedCompletionDate();
     if (!finish) return "-";
-    return finish.toLocaleString("id-ID", {
+    return finish.toLocaleString("en-US", {
       day: "2-digit",
       month: "long",
       year: "numeric",
@@ -70,7 +73,7 @@ export default function EditRoom({ room, onSave, onCancel }) {
     e.preventDefault();
     const finish = getEstimatedCompletionDate();
 
-    // 2. KIRIM PAYLOAD LENGKAP YANG DIDUKUNG MYSQL DAN UI FRONTEND
+    // Send full payload compatible with both MySQL and Frontend UI
     if (onSave) {
       onSave({
         ...form,
@@ -83,7 +86,7 @@ export default function EditRoom({ room, onSave, onCancel }) {
         estimatedCompletion:
           form.status === "available" || !finish
             ? null
-            : finish.toLocaleString("id-ID", {
+            : finish.toLocaleString("en-US", {
                 day: "2-digit",
                 month: "short",
                 year: "numeric",
@@ -95,22 +98,22 @@ export default function EditRoom({ room, onSave, onCancel }) {
   };
 
   const statusOptions = [
-    { value: "available", label: "available", icon: CheckCircle2 },
-    { value: "occupied", label: "occupied", icon: Sparkles },
-    { value: "cleaning", label: "cleaning", icon: Sparkles },
-    { value: "maintenance", label: "maintenance", icon: Wrench },
+    { value: "available", label: "Available" },
+    { value: "occupied", label: "Occupied" },
+    { value: "cleaning", label: "Cleaning" },
+    { value: "maintenance", label: "Maintenance" },
   ];
 
   const durationOptions = [
-    { value: "30", label: "30 Menit" },
-    { value: "60", label: "1 Jam" },
-    { value: "90", label: "1 Jam 30 Menit" },
-    { value: "120", label: "2 Jam" },
-    { value: "180", label: "3 Jam" },
-    { value: "240", label: "4 Jam" },
-    { value: "480", label: "8 Jam" },
-    { value: "720", label: "12 Jam" },
-    { value: "1440", label: "24 Jam" },
+    { value: "30", label: "30 Minutes" },
+    { value: "60", label: "1 Hour" },
+    { value: "90", label: "1 Hour 30 Minutes" },
+    { value: "120", label: "2 Hours" },
+    { value: "180", label: "3 Hours" },
+    { value: "240", label: "4 Hours" },
+    { value: "480", label: "8 Hours" },
+    { value: "720", label: "12 Hours" },
+    { value: "1440", label: "24 Hours" },
   ];
 
   return (
@@ -122,10 +125,10 @@ export default function EditRoom({ room, onSave, onCancel }) {
             ROOM MANAGEMENT
           </span>
           <h1 className="mt-1 text-2xl font-bold text-slate-900">
-            Edit Kondisi Kamar
+            Edit Room Condition
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Atur status kebersihan, maintenance, dan estimasi ketersediaan kamar.
+            Manage cleaning status, maintenance, and estimated room availability.
           </p>
         </div>
 
@@ -135,7 +138,7 @@ export default function EditRoom({ room, onSave, onCancel }) {
           className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
         >
           <ArrowLeft size={16} />
-          Kembali
+          Back
         </button>
       </div>
 
@@ -144,17 +147,17 @@ export default function EditRoom({ room, onSave, onCancel }) {
         <div className="space-y-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
           <div>
             <h2 className="text-base font-semibold text-slate-900">
-              Informasi Kamar
+              Room Information
             </h2>
             <p className="text-xs text-slate-500">
-              Informasi kamar yang akan diperbarui.
+              Details of the room to be updated.
             </p>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">
-                Nomor Kamar
+                Room Number
               </label>
               <input
                 name="number"
@@ -167,7 +170,7 @@ export default function EditRoom({ room, onSave, onCancel }) {
 
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700">
-                Tipe Kamar
+                Room Type
               </label>
               <select
                 name="typeId"
@@ -186,7 +189,7 @@ export default function EditRoom({ room, onSave, onCancel }) {
 
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              Status Kamar
+              Room Status
             </label>
 
             <select
@@ -208,7 +211,7 @@ export default function EditRoom({ room, onSave, onCancel }) {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Waktu Mulai
+                    Start Time
                   </label>
                   <input
                     type="datetime-local"
@@ -222,7 +225,7 @@ export default function EditRoom({ room, onSave, onCancel }) {
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Estimasi Waktu
+                    Estimated Duration
                   </label>
                   <select
                     name="duration"
@@ -243,7 +246,7 @@ export default function EditRoom({ room, onSave, onCancel }) {
                 <div className="flex items-center gap-2 text-blue-700">
                   <Clock size={17} />
                   <span className="text-sm font-semibold">
-                    Estimasi Kamar Selesai
+                    Estimated Completion
                   </span>
                 </div>
 
@@ -256,14 +259,14 @@ export default function EditRoom({ room, onSave, onCancel }) {
 
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">
-              Catatan / Keterangan
+              Notes / Remarks
             </label>
             <textarea
               name="note"
               value={form.note}
               onChange={handleChange}
               rows={4}
-              placeholder="Contoh: Pembersihan kamar mandi, penggantian sprei, perbaikan AC..."
+              placeholder="Example: Bathroom cleaning, bedsheet replacement, AC repair..."
               className="w-full resize-none rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500"
             />
           </div>
@@ -274,7 +277,7 @@ export default function EditRoom({ room, onSave, onCancel }) {
               onClick={onCancel}
               className="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
             >
-              Batal
+              Cancel
             </button>
 
             <button
@@ -282,7 +285,7 @@ export default function EditRoom({ room, onSave, onCancel }) {
               className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
             >
               <Save size={16} />
-              Simpan Perubahan
+              Save Changes
             </button>
           </div>
         </div>
@@ -296,7 +299,7 @@ export default function EditRoom({ room, onSave, onCancel }) {
 
             <div>
               <h3 className="font-bold text-slate-900">
-                Kamar {form.number}
+                Room {form.number}
               </h3>
               <p className="text-xs text-slate-500">{form.type}</p>
             </div>
@@ -304,32 +307,32 @@ export default function EditRoom({ room, onSave, onCancel }) {
 
           <div className="rounded-xl bg-slate-50 p-4">
             <p className="text-xs font-medium text-slate-500">
-              Status Saat Ini
+              Current Status
             </p>
 
-            <p className="mt-2 text-sm font-bold text-slate-900">
+            <p className="mt-2 text-sm font-bold capitalize text-slate-900">
               {form.status}
             </p>
           </div>
 
           <div className="mt-4 space-y-3 text-xs text-slate-500">
             <p>
-              <strong className="text-slate-700">Estimasi:</strong>{" "}
+              <strong className="text-slate-700">Estimate:</strong>{" "}
               {form.status === "available"
-                ? "Kamar siap digunakan"
-                : `${form.duration} menit`}
+                ? "Room is ready for guests"
+                : `${form.duration} minutes`}
             </p>
 
             <p>
-              <strong className="text-slate-700">Selesai:</strong>{" "}
+              <strong className="text-slate-700">Completion:</strong>{" "}
               {form.status === "available"
-                ? "Tidak ada jadwal"
+                ? "No schedule"
                 : estimatedCompletion()}
             </p>
 
             <p>
-              <strong className="text-slate-700">Keterangan:</strong>{" "}
-              {form.note || "Belum ada catatan"}
+              <strong className="text-slate-700">Notes:</strong>{" "}
+              {form.note || "No notes yet"}
             </p>
           </div>
         </div>

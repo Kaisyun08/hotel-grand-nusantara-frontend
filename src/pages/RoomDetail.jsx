@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import Footer from '../components/common/Footer';
 import Loading from '../components/common/Loading';
 import CustomAlert from '../components/common/CustomAlert';
@@ -7,14 +7,18 @@ import BookingForm from '../components/BookingForm';
 import { TipeKamarService } from '../services/TipeKamarServices';
 import { hotelRooms } from '../data/hotelRooms';
 import { formatIDR, nightsBetween } from '../utils/formatters';
-import { AuthServices } from '../services/AuthServices';
 import { BookingServices } from '../services/BookingServices';
 
 // Helper Pemeta Nama/ID Backend MySQL ke Key hotelRooms.js
-const getLocalRoomData = (backendData) => {
-  if (!backendData) return hotelRooms.superiorRoom;
+const getLocalRoomData = (backendData, fallbackKey = 'standardRoom') => {
+  const raw = Array.isArray(backendData)
+    ? backendData[0]
+    : backendData?.data || backendData;
 
-  // 1. Coba pencocokan berdasarkan id_tipe_kamar
+  if (!raw) {
+    return hotelRooms[fallbackKey] || hotelRooms.standardRoom;
+  }
+
   const idMap = {
     1: 'standardRoom',
     2: 'superiorRoom',
@@ -24,39 +28,40 @@ const getLocalRoomData = (backendData) => {
     6: 'presidentialRoom',
   };
 
-  // 2. Coba pencocokan berdasarkan nama_tipe (misal: "superior_room" -> "superiorRoom")
-  const rawName = String(backendData.nama_tipe || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const rawName = String(raw.nama_tipe || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '');
 
-  let targetKey = idMap[backendData.id_tipe_kamar];
+  let targetKey = idMap[raw.id_tipe_kamar];
 
   if (!targetKey) {
     if (rawName.includes('standard')) targetKey = 'standardRoom';
-    else if (rawName.includes('suite')) targetKey = 'superiorRoom';
+    else if (rawName.includes('superior')) targetKey = 'superiorRoom';
     else if (rawName.includes('deluxe')) targetKey = 'deluxeRoom';
     else if (rawName.includes('executive')) targetKey = 'executiveRoom';
-    else if (rawName.includes('suite')) targetkey = 'suiteRoom';
     else if (rawName.includes('presidential')) targetKey = 'presidentialRoom';
-    else targetKey = 'superiorRoom';
+    else if (rawName.includes('suite')) targetKey = 'suiteRoom';
+    else targetKey = fallbackKey;
   }
 
-  const baseLocalData = hotelRooms[targetKey] || hotelRooms.standardRoom;
+  const baseLocalData =
+    hotelRooms[targetKey] || hotelRooms[fallbackKey] || hotelRooms.standardRoom;
 
-  // Gabungkan: Ambil foto, deskripsi, fasilitas, view, size dari FRONTEND hotelRooms.js
-  // Hanya timpa ID, Harga, dan Kapasitas dari BACKEND MySQL
   return {
     ...baseLocalData,
-    id_tipe_kamar: backendData.id_tipe_kamar,
-    name: baseLocalData.name || backendData.nama_tipe,
-    price: Number(backendData.harga || baseLocalData.price),
-    maxGuests: Number(backendData.kapasitas || baseLocalData.maxGuests),
+    id_tipe_kamar: raw.id_tipe_kamar,
+    name: baseLocalData.name || raw.nama_tipe,
+    price: Number(raw.harga || baseLocalData.price),
+    maxGuests: Number(raw.kapasitas || baseLocalData.maxGuests),
   };
 };
 
 export default function RoomDetail() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const roomTypeIdFromUrl = searchParams.get('id') || '2';
+  const roomTypeIdFromUrl = searchParams.get('id') || '1';
   const typeFromUrl = searchParams.get('type');
-  const selectedType = (typeFromUrl && hotelRooms[typeFromUrl]) ? typeFromUrl : 'standardRoom';
+  const selectedType =
+    typeFromUrl && hotelRooms[typeFromUrl] ? typeFromUrl : 'standardRoom';
 
   const [currentRoom, setCurrentRoom] = useState(null);
   const [activeImage, setActiveImage] = useState(0);
@@ -80,34 +85,43 @@ export default function RoomDetail() {
 
     TipeKamarService.getTipeKamarById(roomTypeIdFromUrl)
       .then((backendData) => {
-        // Gabungkan data backend dengan hotelRooms.js
-        const mergedData = getLocalRoomData(backendData);
+        const mergedData = getLocalRoomData(backendData, selectedType);
         setCurrentRoom(mergedData);
       })
       .catch((err) => {
         console.error('Backend offline/404, menggunakan full data lokal:', err);
-        // Fallback jika API gagal
-        const fallbackLocal = hotelRooms[typeFromUrl] || hotelRooms.standardRoom;
+        const fallbackLocal = hotelRooms[selectedType] || hotelRooms.standardRoom;
         setCurrentRoom(fallbackLocal);
       })
       .finally(() => setIsLoading(false));
-  }, [roomTypeIdFromUrl, typeFromUrl]);
+  }, [roomTypeIdFromUrl, selectedType]);
 
-  // Variabel pengaman data kamar
   const roomData =
     currentRoom ||
-    hotelRooms[typeFromUrl] ||
-    hotelRooms.standardRoom ||
-    { price: 500000, name: 'Standard Room', maxGuests: 2, images: [] };
+    hotelRooms[selectedType] ||
+    hotelRooms.standardRoom || {
+      price: 500000,
+      name: 'Standard Room',
+      maxGuests: 2,
+      images: [],
+    };
 
-  // Hitung jumlah malam dan total bayar dengan aman
   const rawNights = nightsBetween(checkIn, checkOut);
   const nights = Number.isNaN(rawNights) || rawNights < 0 ? 0 : rawNights;
   const total = nights * (roomData.price || 0);
 
   const handleTypeChange = (typeKey) => {
-    const idMap = { standardRoom: '1', superiorRoom: '2', deluxeRoom: '3', executive: '4', suit: '5', presidentialRoom: '6' };
-    const targetId = idMap[typeKey] || '2';
+    const idMap = {
+      standardRoom: '1',
+      superiorRoom: '2',
+      deluxeRoom: '3',
+      executiveRoom: '4',
+      executive: '4',
+      suiteRoom: '5',
+      suite: '5',
+      presidentialRoom: '6',
+    };
+    const targetId = idMap[typeKey] || '1';
 
     setSearchParams({ id: targetId, type: typeKey });
     setActiveImage(0);
@@ -122,6 +136,9 @@ export default function RoomDetail() {
     setCheckIn(value);
     if (checkOut && value && checkOut <= value) setCheckOut('');
   };
+  const handleCheckOut = (value) => {
+    setCheckOut(value);
+  };
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
@@ -135,32 +152,36 @@ export default function RoomDetail() {
       return;
     }
 
-    const currentUser = JSON.parse(sessionStorage.getItem("user") || "null");
+    const currentUser = JSON.parse(sessionStorage.getItem('user') || 'null');
     const idTamu = currentUser?.id_tamu || currentUser?.id_user || currentUser?.id;
 
-    // 1. Cek jika user belum login atau id_tamu tidak ditemukan
     if (!currentUser || !idTamu) {
       navigate('/login', {
         state: {
-          from: `/room-detail?id=${roomData?.id_kamar || roomData?.id_tipe_kamar || '2'}&type=${selectedType}`,
-          booking: { type: selectedType, typeId: roomData?.id_tipe_kamar, checkIn, checkOut, guests, paymentMethod },
+          from: `/room-detail?id=${roomData?.id_tipe_kamar || roomTypeIdFromUrl}&type=${selectedType}`,
+          booking: {
+            type: selectedType,
+            typeId: roomData?.id_tipe_kamar || roomTypeIdFromUrl,
+            checkIn,
+            checkOut,
+            guests,
+            paymentMethod,
+          },
         },
       });
       return;
     }
 
-
-    // 2. Ambil id_kamar dari data kamar yang aktif (fallback ke URL parameter atau id_tipe_kamar)
-    const idKamar = roomData?.id_kamar || roomTypeIdFromUrl || roomData?.id_tipe_kamar;
+    const targetTipeId = Number(roomData?.id_tipe_kamar || roomTypeIdFromUrl);
 
     const bookingPayload = {
       id_tamu: Number(idTamu),
-      id_kamar: Number(idKamar),
+      id_tipe_kamar: targetTipeId,
+      id_kamar: Number(roomData?.id_kamar || targetTipeId),
       tanggal_check_in: checkIn,
       tanggal_check_out: checkOut,
       status_reservasi: 'pending',
       total_biaya: total,
-
       metode: paymentMethod,
       metode_pembayaran: paymentMethod,
       status_verifikasi: 'pending',
@@ -218,11 +239,7 @@ export default function RoomDetail() {
               to="/"
               className="py-4 px-1 text-sm font-semibold text-gray-500 hover:text-blue-600 whitespace-nowrap transition-all duration-200 flex items-center gap-1.5 border-b-2 border-transparent hover:border-blue-600"
             >
-<<<<<<< HEAD
-              ← Beranda
-=======
               ← Home
->>>>>>> origin/master
             </Link>
             <div className="h-4 w-[1px] bg-gray-300 flex-shrink-0" />
             {Object.entries(hotelRooms).map(([key, room]) => (
@@ -232,8 +249,8 @@ export default function RoomDetail() {
                 aria-selected={selectedType === key}
                 onClick={() => handleTypeChange(key)}
                 className={`py-4 px-1 text-sm font-medium border-b-2 whitespace-nowrap transition-all duration-200 ${selectedType === key
-                  ? 'border-amber-600 text-amber-700 font-semibold'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-amber-600 text-amber-700 font-semibold'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
               >
                 {room.tabLabel}
@@ -260,16 +277,12 @@ export default function RoomDetail() {
                     ★ {roomData.rating?.toFixed(1) || '5.0'}
                   </span>
                   <span className="text-gray-400 text-xs">
-<<<<<<< HEAD
-                    ({roomData.reviewsCount || 0} Ulasan Tamu)
-=======
                     ({roomData.reviewsCount || 0} Review)
->>>>>>> origin/master
                   </span>
                 </div>
               </div>
 
-              {/* Gallery (Diambil dari hotelRooms.js) */}
+              {/* Gallery */}
               <div className="space-y-3">
                 <div className="relative h-[260px] sm:h-[440px] w-full rounded-2xl overflow-hidden shadow-md bg-gray-200">
                   <img
@@ -285,8 +298,8 @@ export default function RoomDetail() {
                       key={imgUrl}
                       onClick={() => setActiveImage(index)}
                       className={`relative flex-shrink-0 w-24 h-16 rounded-xl overflow-hidden border-2 transition-all ${activeImage === index
-                        ? 'border-amber-600 scale-95 shadow-sm'
-                        : 'border-transparent opacity-60 hover:opacity-100'
+                          ? 'border-amber-600 scale-95 shadow-sm'
+                          : 'border-transparent opacity-60 hover:opacity-100'
                         }`}
                     >
                       <img
@@ -299,7 +312,7 @@ export default function RoomDetail() {
                 </div>
               </div>
 
-              {/* Quick specs (Diambil dari hotelRooms.js) */}
+              {/* Quick specs */}
               <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
                 <dl className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                   {[
@@ -320,7 +333,7 @@ export default function RoomDetail() {
                 </dl>
               </div>
 
-              {/* Description and amenities (Diambil dari hotelRooms.js) */}
+              {/* Description and amenities */}
               <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
                 <h2 className="text-xl font-serif font-bold mb-2">Description</h2>
                 <p className="text-gray-600 mb-5 leading-relaxed">
@@ -349,7 +362,7 @@ export default function RoomDetail() {
               paymentMethod={paymentMethod}
               onPaymentMethodChange={setPaymentMethod}
               onCheckInChange={handleCheckIn}
-              onCheckOutChange={setCheckOut}
+              onCheckOutChange={handleCheckOut}
               onGuestsChange={setGuests}
               onSubmit={handleBookingSubmit}
             />

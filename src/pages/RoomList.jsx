@@ -66,11 +66,12 @@ export default function RoomList() {
 
     const handleSelectRoom = (roomKey) => {
         const idMap = {
-            suiteRoom: "1",
+            standardRoom: "1",
             superiorRoom: "2",
             deluxeRoom: "3",
-            executive: "4",
-            presidentialRoom: "5",
+            executiveClub: "4",
+            suiteRoom: "5",
+            presidentialSuite: "6",
         }
         const targetId = idMap[roomKey] || '2';
         navigate(`/room-detail?id=${targetId}&type=${roomKey}`);

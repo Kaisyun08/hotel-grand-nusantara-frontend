@@ -1,29 +1,40 @@
-// Sesuaikan URL ini dengan port/rute backend Express milik temanmu
-const API_URL = 'http://192.168.1.103:3000/api/kamar';
+const API_URL = "http://192.168.1.103:3000/api/kamar";
 
 export const RoomServices = {
   // 1. Ambil semua unit kamar (Untuk Admin Dashboard)
   getAllRooms: async () => {
     try {
       const response = await fetch(API_URL);
-      if (!response.ok) throw new Error('Gagal mengambil data kamar');
+      if (!response.ok) throw new Error("Gagal mengambil data kamar");
       return await response.json();
     } catch (error) {
-      console.error('Error getAllRooms:', error);
+      console.error("Error getAllRooms:", error);
       throw error;
     }
   },
 
   // 2. Cek ketersediaan kamar kosong (Untuk User di RoomDetail/BookingForm)
-  getAvailableRooms: async (typeId, checkIn, checkOut) => {
+  getAvailableRooms: async (roomTypeId, checkIn, checkOut) => {
     try {
       const response = await fetch(
-        `${API_URL}/available?tipe_id=${typeId}&checkIn=${checkIn}&checkOut=${checkOut}`
+        `${API_URL}?id_tipe_kamar=${roomTypeId}&checkIn=${checkIn}&checkOut=${checkOut}`
       );
-      if (!response.ok) throw new Error('Gagal mengecek ketersediaan kamar');
-      return await response.json();
+      if (!response.ok) {
+        throw new Error("Gagal mengecek ketersediaan kamar");
+      }
+      const result = await response.json();
+      const list = Array.isArray(result) ? result : result.data || [];
+
+      // Filter hanya kamar dengan status available & tipe yang sesuai
+      return list.filter(
+        (k) =>
+          String(k.id_tipe_kamar) === String(roomTypeId) &&
+          ["available", "occupied", "maintenance", "cleaning"].includes(
+            String(k.status).toLowerCase()
+          )
+      );
     } catch (error) {
-      console.error('Error getAvailableRooms:', error);
+      console.error("Error getAvailableRooms:", error);
       throw error;
     }
   },
@@ -32,14 +43,14 @@ export const RoomServices = {
   createRoom: async (roomData) => {
     try {
       const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(roomData),
       });
-      if (!response.ok) throw new Error('Gagal menambah kamar');
+      if (!response.ok) throw new Error("Gagal menambah kamar");
       return await response.json();
     } catch (error) {
-      console.error('Error createRoom:', error);
+      console.error("Error createRoom:", error);
       throw error;
     }
   },
@@ -48,26 +59,21 @@ export const RoomServices = {
   updateRoom: async (id_kamar, roomData) => {
     try {
       const response = await fetch(`${API_URL}/${id_kamar}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // Sertakan id_hotel (bisa default 1 jika hotel tunggal)
           id_hotel: roomData.id_hotel || 1,
-
-          // Kirim id_tipe_kamar dan nomor_kamar dengan fallback nama properti yang aman
           id_tipe_kamar: Number(roomData.id_tipe_kamar || roomData.typeId || 1),
           nomor_kamar: roomData.nomor_kamar || roomData.number,
-
-          // Status kamar
-          status: roomData.status || 'tersedia',
+          status: roomData.status || "available",
         }),
       });
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.message || 'Gagal memperbarui kamar di server');
+        throw new Error(errData.message || "Gagal memperbarui kamar di server");
       }
 
       return await response.json();
@@ -81,12 +87,12 @@ export const RoomServices = {
   deleteRoom: async (id) => {
     try {
       const response = await fetch(`${API_URL}/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-      if (!response.ok) throw new Error('Gagal menghapus kamar');
+      if (!response.ok) throw new Error("Gagal menghapus kamar");
       return await response.json();
     } catch (error) {
-      console.error('Error deleteRoom:', error);
+      console.error("Error deleteRoom:", error);
       throw error;
     }
   },

@@ -1,7 +1,5 @@
 export const hotelRooms = {
-
-
-    standardRoom: {
+  standardRoom: {
     tabLabel: 'Standard Room',
     name: 'Standard Room',
     price: 500000,
@@ -35,17 +33,10 @@ export const hotelRooms = {
     rating: 4.7,
     reviewsCount: 310,
     description:
-<<<<<<< HEAD
-      'The perfect choice for maximum comfort on business trips or vacations, featuring a cozy interior and premium beds.',
-    features: {
-      guests: '2 Dewasa',
-      size: '36 m²',
-=======
       'A comfortable 40 m² retreat with city views, twin beds, and premium amenities — ideal for business trips or solo vacations.',
     features: {
-      guests: '2 Dewasa',
+      guests: '2 Adults',
       size: '40 m²',
->>>>>>> origin/master
       bed: 'Single or Twin Bed',
       view: 'City View',
     },
@@ -70,13 +61,9 @@ export const hotelRooms = {
     rating: 4.8,
     reviewsCount: 245,
     description:
-<<<<<<< HEAD
-      'Menawarkan ruang yang lebih luas dengan sentuhan kemewahan ekstra dan pemandangan kolam renang langsung dari kamar.',
-=======
       'Offers more spacious accommodations with an extra touch of luxury and a direct view of the pool from the room.',
->>>>>>> origin/master
     features: {
-      guests: '2 Dewasa, 1 Anak',
+      guests: '2 Adults, 1 Child',
       size: '45 m²',
       bed: 'King Bed',
       view: 'Pool View',
@@ -96,20 +83,16 @@ export const hotelRooms = {
       'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=1200&q=80',
     ],
   },
-  executive: {
+  executiveRoom: {
     tabLabel: 'Executive Club',
     name: 'Executive Club Room',
     price: 2700000,
     rating: 4.9,
     reviewsCount: 188,
     description:
-<<<<<<< HEAD
-      'Dirancang khusus bagi para eksekutif dan pelancong kelas atas, lengkap dengan akses lounge eksklusif.',
-=======
       'Designed specifically for executives and high-end travelers, complete with access to an exclusive lounge.',
->>>>>>> origin/master
     features: {
-      guests: '2 Dewasa, 1 Anak',
+      guests: '2 Adults, 1 Child',
       size: '55 m²',
       bed: '1 Super King Bed',
       view: 'Skyline View',
@@ -135,13 +118,9 @@ export const hotelRooms = {
     rating: 4.9,
     reviewsCount: 96,
     description:
-<<<<<<< HEAD
-      'Nikmati kemewahan ruang apartemen privat dengan ruang tamu terpisah dan pemandangan laut yang luas.',
-=======
       'Enjoy the luxury of a private apartment with a separate living room and sweeping ocean views.',
->>>>>>> origin/master
     features: {
-      guests: '3 Dewasa / 2D + 2A',
+      guests: '3 Adults / 2 Adults + 2 Children',
       size: '85 m²',
       bed: '1 Super King Bed',
       view: 'Panoramic Ocean View',
@@ -167,13 +146,9 @@ export const hotelRooms = {
     rating: 5.0,
     reviewsCount: 32,
     description:
-<<<<<<< HEAD
-      'Puncak dari segala kemewahan dan privasi terbaik, dengan ruang makan, ruang kerja, dan layanan pribadi.',
-=======
       'The pinnacle of luxury and privacy, featuring a dining room, a workspace, and personal services.',
->>>>>>> origin/master
     features: {
-      guests: '4 Dewasa',
+      guests: '4 Adults',
       size: '220 m²',
       bed: '2 Grand King Beds',
       view: '360° Full City View',

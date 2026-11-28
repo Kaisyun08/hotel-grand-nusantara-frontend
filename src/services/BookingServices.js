@@ -4,12 +4,22 @@ export const BookingServices = {
   // 1. DIBUTUHKAN USER: Membuat Reservasi Baru (POST)
   createBooking: async (bookingData) => {
     try {
+      const token = sessionStorage.getItem('token');
+      const payload = {
+        ...bookingData,
+        id_tipe_kamar: Number(
+          bookingData.id_tipe_kamar || bookingData.typeId || bookingData.id
+        ),
+        id_kamar: bookingData.id_kamar ? Number(bookingData.id_kamar) : undefined,
+      };
+
       const response = await fetch(`${BASE_URL}/reservasi`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify(bookingData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {

@@ -46,8 +46,8 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
     if (form.password.length < 8) {
       setAlertConfig({
         isOpen: true,
-        title: "Password Terlalu Pendek!",
-        message: "Password minimal harus terdiri dari 8 karakter.",
+        title: "Password Too Short!",
+        message: "Password must be at least 8 characters long.",
         type: "error",
       });
       return;
@@ -55,13 +55,13 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
 
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const headers = {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       };
 
-      // Payload fleksibel agar cocok dengan struktur kolom tabel users / admin di MySQL
+      // Flexible payload matching MySQL users / admin table columns
       const payload = {
         username: form.username,
         email: form.email,
@@ -69,8 +69,8 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
         role: form.role,
       };
 
-      // Gunakan /auth/register agar otomatis tersimpan ke tabel users (dan bisa langsung dipakai login)
-      // Fallback ke /admin jika endpoint /auth/register gagal
+      // Use /auth/register so the account is saved to the users table for login
+      // Fallback to /admin if /auth/register fails
       let response = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
         headers,
@@ -88,13 +88,13 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.message || data?.error || "Gagal menambahkan akun baru.");
+        throw new Error(data?.message || data?.error || "Failed to add new account.");
       }
 
       setAlertConfig({
         isOpen: true,
-        title: "Akun Berhasil Ditambahkan!",
-        message: `Akun ${form.role} atas nama ${form.username} siap digunakan untuk login.`,
+        title: "Account Added Successfully!",
+        message: `The ${form.role} account for ${form.username} is ready to use for login.`,
         type: "success",
       });
 
@@ -107,8 +107,8 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
     } catch (error) {
       setAlertConfig({
         isOpen: true,
-        title: "Gagal Menambah Akun!",
-        message: error.message || "Terjadi kesalahan pada server.",
+        title: "Failed to Add Account!",
+        message: error.message || "A server error occurred.",
         type: "error",
       });
     } finally {
@@ -128,7 +128,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
 
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-sm">
         <div className="w-full max-w-lg overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
-          {/* HEADER MODAL */}
+          {/* MODAL HEADER */}
           <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
@@ -136,10 +136,10 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
               </div>
               <div>
                 <h3 className="text-base font-bold text-slate-900">
-                  Tambah Akun Baru
+                  Add New Account
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Buat akun Administrator atau pengguna sistem hotel.
+                  Create an Administrator or hotel system user account.
                 </p>
               </div>
             </div>
@@ -157,7 +157,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
           <form onSubmit={handleSubmit} className="space-y-4 p-6">
             <div>
               <label className="mb-1.5 block text-xs font-semibold text-slate-700">
-                Role / Hak Akses
+                Role / Access Level
               </label>
               <div className="relative">
                 <select
@@ -166,22 +166,22 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
                   onChange={handleChange}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-blue-600 focus:bg-white"
                 >
-                  <option value="admin">Admin (Administrator Hotel)</option>
-                  <option value="tamu">Tamu (User Biasa)</option>
+                  <option value="admin">Admin (Hotel Administrator)</option>
+                  <option value="tamu">Guest (Regular User)</option>
                 </select>
               </div>
             </div>
 
             <div>
               <label className="mb-1.5 block text-xs font-semibold text-slate-700">
-                Nama Lengkap
+                Full Name
               </label>
               <input
                 type="text"
                 name="username"
                 value={form.username}
                 onChange={handleChange}
-                placeholder="Contoh: Budi Santoso"
+                placeholder="Example: Budi Santoso"
                 required
                 className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-blue-600"
               />
@@ -189,7 +189,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
 
             <div>
               <label className="mb-1.5 block text-xs font-semibold text-slate-700">
-                Email Login
+                Login Email
               </label>
               <input
                 type="email"
@@ -212,7 +212,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
                   name="password"
                   value={form.password}
                   onChange={handleChange}
-                  placeholder="Minimal 8 karakter"
+                  placeholder="Minimum 8 characters"
                   minLength={8}
                   required
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 pr-10 text-sm outline-none focus:border-blue-600"
@@ -230,18 +230,18 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
             <div className="flex items-center gap-2 rounded-xl bg-blue-50/70 p-3 text-[11px] text-blue-700">
               <ShieldCheck size={16} className="shrink-0" />
               <span>
-                Akun yang ditambahkan akan langsung tersimpan ke database dan dapat digunakan untuk login.
+                The added account will be saved directly to the database and can be used immediately for login.
               </span>
             </div>
 
-            {/* FOOTER TOMBOL */}
+            {/* ACTION BUTTONS */}
             <div className="flex justify-end gap-3 border-t border-slate-100 pt-4">
               <button
                 type="button"
                 onClick={onClose}
                 className="rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
               >
-                Batal
+                Cancel
               </button>
               <button
                 type="submit"
@@ -249,7 +249,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }) {
                 className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-700 disabled:opacity-60"
               >
                 <UserPlus size={15} />
-                {loading ? "Menyimpan..." : "Simpan Akun"}
+                {loading ? "Saving..." : "Save Account"}
               </button>
             </div>
           </form>

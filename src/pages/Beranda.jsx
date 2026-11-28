@@ -4,11 +4,7 @@ import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 import Loading from "../components/common/Loading";
 
-<<<<<<< HEAD
 function Beranda() {
-=======
-function Home() {
->>>>>>> origin/master
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,45 +55,27 @@ function Home() {
 
       {/* HERO SECTION BANNER */}
       <section
-<<<<<<< HEAD
         id="beranda"
-=======
-        id="Home"
->>>>>>> origin/master
         className="relative flex min-h-[550px] flex-col justify-center bg-cover bg-center px-8 py-20 text-white bg-[url('https://images.unsplash.com/photo-1566073771259-6a8506099945')]"
       >
         <div className="absolute inset-0 bg-slate-950/60" />
 
         <div className="relative z-10 mx-auto max-w-4xl text-center space-y-6">
           <span className="inline-block rounded-full bg-blue-500/30 px-4 py-1.5 text-xs font-semibold text-blue-200 border border-blue-400/30">
-<<<<<<< HEAD
-            Kemewahan Berbalut Kenyamanan
-          </span>
-          <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl leading-tight">
-            Selamat Datang di <br /> Hotel Grand Nusantara
-          </h1>
-          <p className="mx-auto max-w-2xl text-base text-gray-200 md:text-lg">
-            Nikmati pengalaman menginap tak terlupakan dengan pemandangan menakjubkan, fasilitas kelas dunia, dan pelayanan terbaik khas Nusantara.
-=======
             Luxury Wrapped in Comfort
           </span>
           <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl leading-tight">
-           Welcome To <br /> Hotel Grand Nusantara
+            Welcome To <br /> Hotel Grand Nusantara
           </h1>
           <p className="mx-auto max-w-2xl text-base text-gray-200 md:text-lg">
             Enjoy an unforgettable stay with breathtaking views, world-class amenities, and the finest service in the Nusantara tradition.
->>>>>>> origin/master
           </p>
           <div className="pt-4">
             <button
               onClick={() => handleBookNow("superiorRoom")}
               className="inline-block rounded-xl bg-blue-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:bg-blue-700 active:scale-95"
             >
-<<<<<<< HEAD
-              Jelajahi Kamar
-=======
               Explore The Room
->>>>>>> origin/master
             </button>
           </div>
         </div>
@@ -106,13 +84,8 @@ function Home() {
       {/* SECTION PILIHAN KAMAR */}
       <section id="kamar" className="mx-auto max-w-6xl px-8 py-16 scroll-mt-20">
         <div className="mb-10 text-center">
-<<<<<<< HEAD
-          <h2 className="text-3xl font-bold text-gray-900">Pilihan Kamar Favorit</h2>
-          <p className="mt-2 text-sm text-gray-500">Dirancang untuk kenyamanan istirahat Anda</p>
-=======
           <h2 className="text-3xl font-bold text-gray-900">Favorite Room Option</h2>
           <p className="mt-2 text-sm text-gray-500">Designed for your comfort while resting</p>
->>>>>>> origin/master
         </div>
 
         {/* Grid Kartu Kamar */}
@@ -129,11 +102,7 @@ function Home() {
               <div className="p-6 space-y-3">
                 <h3 className="text-xl font-bold text-gray-800">Deluxe Room</h3>
                 <p className="text-xs text-gray-500 line-clamp-2">
-<<<<<<< HEAD
-                  Kamar luas dengan kasur ukuran King, pemandangan kolam renang, dan fasilitas modern.
-=======
                   A spacious room with a king-size bed, a view of the pool, and modern amenities.
->>>>>>> origin/master
                 </p>
               </div>
             </div>
@@ -146,11 +115,7 @@ function Home() {
                 onClick={() => handleBookNow("deluxeRoom")}
                 className="rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-600"
               >
-<<<<<<< HEAD
-                Pesan Sekarang
-=======
-               Book Now
->>>>>>> origin/master
+                Book Now
               </button>
             </div>
           </div>
@@ -166,32 +131,20 @@ function Home() {
               <div className="p-6 space-y-3">
                 <h3 className="text-xl font-bold text-gray-800">Executive Club</h3>
                 <p className="text-xs text-gray-500 line-clamp-2">
-<<<<<<< HEAD
-                  Suite mewah dilengkapi ruang tamu terpisah, bathtub, dan akses lounge eksekutif.
-=======
                   These luxurious suites feature a separate living room, a bathtub, and access to the executive lounge.
->>>>>>> origin/master
                 </p>
               </div>
             </div>
             <div className="px-6 pb-6 pt-2 flex items-center justify-between">
               <div>
                 <span className="text-lg font-bold text-blue-600">Rp 2.700.000</span>
-<<<<<<< HEAD
-                <span className="text-xs text-gray-400"> /malam</span>
-=======
                 <span className="text-xs text-gray-400"> /night</span>
->>>>>>> origin/master
               </div>
               <button
                 onClick={() => handleBookNow("executive")}
                 className="rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-600"
               >
-<<<<<<< HEAD
-                Pesan Sekarang
-=======
                 Book Now
->>>>>>> origin/master
               </button>
             </div>
           </div>
@@ -207,32 +160,20 @@ function Home() {
               <div className="p-6 space-y-3">
                 <h3 className="text-xl font-bold text-gray-800">Presidential Suite</h3>
                 <p className="text-xs text-gray-500 line-clamp-2">
-<<<<<<< HEAD
-                  Pengalaman menginap paling eksklusif dengan jacuzzi pribadi dan pelayan 24 jam.
-=======
                   The most exclusive stay, featuring a private jacuzzi and 24-hour service.
->>>>>>> origin/master
                 </p>
               </div>
             </div>
             <div className="px-6 pb-6 pt-2 flex items-center justify-between">
               <div>
                 <span className="text-lg font-bold text-blue-600">Rp 15.000.000</span>
-<<<<<<< HEAD
-                <span className="text-xs text-gray-400"> /malam</span>
-=======
                 <span className="text-xs text-gray-400"> /night</span>
->>>>>>> origin/master
               </div>
               <button
                 onClick={() => handleBookNow("presidentialRoom")}
                 className="rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-600"
               >
-<<<<<<< HEAD
-                Pesan Sekarang
-=======
-Book Now
->>>>>>> origin/master
+                Book Now
               </button>
             </div>
           </div>
@@ -245,8 +186,4 @@ Book Now
   );
 }
 
-<<<<<<< HEAD
 export default Beranda;
-=======
-export default Home;
->>>>>>> origin/master

@@ -12,7 +12,7 @@ export default function AdminLaporan({
   cancelledCount: cancelledProp,
   formatRupiah,
 }) {
-  const [internalPeriod, setInternalPeriod] = useState("Semua Data");
+  const [internalPeriod, setInternalPeriod] = useState("All Data");
   const [reservations, setReservations] = useState([]);
   const [payments, setPayments] = useState([]);
   const [rooms, setRooms] = useState([]);
@@ -26,12 +26,12 @@ export default function AdminLaporan({
       ? formatRupiah
       : (val) => `Rp ${Number(val || 0).toLocaleString("id-ID")}`;
 
-  // Ambil data langsung dari endpoint backend aaPanel
+  // Fetch data directly from backend endpoints
   useEffect(() => {
     const fetchReportData = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         const headers = {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -51,7 +51,7 @@ export default function AdminLaporan({
           return [];
         };
 
-        // Urutkan data reservasi dari ID #1 ke seterusnya (ASC)
+        // Sort reservations ascending by ID
         const sortedReservations = [...extractList(resReservasi)].sort(
           (a, b) => Number(a.id_reservasi || a.id) - Number(b.id_reservasi || b.id)
         );
@@ -60,7 +60,7 @@ export default function AdminLaporan({
         setPayments(extractList(resPembayaran));
         setRooms(extractList(resKamar));
       } catch (err) {
-        console.error("Gagal mengambil data laporan:", err);
+        console.error("Failed to fetch report data:", err);
       } finally {
         setLoading(false);
       }
@@ -69,7 +69,7 @@ export default function AdminLaporan({
     fetchReportData();
   }, []);
 
-  // Gabungkan data reservasi dengan info kamar & status pembayaran jika belum di-JOIN dari backend
+  // Merge reservation data with room & payment info if not joined by backend
   const enrichedReservations = useMemo(() => {
     const source =
       Array.isArray(filteredProp) && filteredProp.length > 0
@@ -98,14 +98,14 @@ export default function AdminLaporan({
     });
   }, [filteredProp, reservations, rooms, payments]);
 
-  // Filter berdasarkan periode waktu
+  // Filter by selected time period
   const computedFilteredReservations = useMemo(() => {
     if (Array.isArray(filteredProp) && filteredProp.length > 0) {
       return enrichedReservations;
     }
 
     return enrichedReservations.filter((item) => {
-      if (reportPeriod === "Semua Data") return true;
+      if (reportPeriod === "All Data" || reportPeriod === "Semua Data") return true;
 
       const rawDate = item.tanggal_check_in || item.checkin || item.created_at;
       if (!rawDate) return false;
@@ -118,21 +118,22 @@ export default function AdminLaporan({
       const itemDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
       const diffDays = Math.floor((today - itemDay) / (1000 * 60 * 60 * 24));
 
-      if (reportPeriod === "Harian") return diffDays === 0;
-      if (reportPeriod === "Mingguan") return diffDays >= 0 && diffDays < 7;
-      if (reportPeriod === "Bulanan")
+      if (reportPeriod === "Daily" || reportPeriod === "Harian") return diffDays === 0;
+      if (reportPeriod === "Weekly" || reportPeriod === "Mingguan")
+        return diffDays >= 0 && diffDays < 7;
+      if (reportPeriod === "Monthly" || reportPeriod === "Bulanan")
         return (
           date.getMonth() === now.getMonth() &&
           date.getFullYear() === now.getFullYear()
         );
-      if (reportPeriod === "Tahunan")
+      if (reportPeriod === "Yearly" || reportPeriod === "Tahunan")
         return date.getFullYear() === now.getFullYear();
 
       return true;
     });
   }, [enrichedReservations, filteredProp, reportPeriod]);
 
-  // Hitung statistik otomatis (gunakan prop jika > 0, jika tidak gunakan hasil hitungan API)
+  // Calculate statistics automatically
   const { totalRevenue, confirmedCount, cancelledCount } = useMemo(() => {
     const calcRevenue = computedFilteredReservations.reduce((sum, item) => {
       const verif = String(item.status_verifikasi || "").toLowerCase();
@@ -144,7 +145,15 @@ export default function AdminLaporan({
 
     const calcConfirmed = computedFilteredReservations.filter((item) => {
       const st = String(item.status_reservasi || item.status || "").toLowerCase();
-      return ["confirmed", "dikonfirmasi", "check_in", "checked_in", "check_out", "checked_out", "selesai"].includes(st);
+      return [
+        "confirmed",
+        "dikonfirmasi",
+        "check_in",
+        "checked_in",
+        "check_out",
+        "checked_out",
+        "selesai",
+      ].includes(st);
     }).length;
 
     const calcCancelled = computedFilteredReservations.filter((item) => {
@@ -161,11 +170,13 @@ export default function AdminLaporan({
 
   return (
     <div className="space-y-6">
-      {/* HEADER & FILTER PERIODE */}
+      {/* HEADER & PERIOD FILTER */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-base font-semibold text-slate-900">Hotel Report Summary</h3>
-          <p className="text-xs text-slate-500">Summary of hotel reservations and revenue from the database.</p>
+          <p className="text-xs text-slate-500">
+            Summary of hotel reservations and revenue from the database.
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <select
@@ -173,27 +184,27 @@ export default function AdminLaporan({
             onChange={(e) => setReportPeriod(e.target.value)}
             className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 outline-none focus:border-blue-500"
           >
-            <option value="Semua Data">Data</option>
-            <option value="Harian">Daily (The Last Day)</option>
-            <option value="Mingguan">Weekly (The Last 7 Day)</option>
-            <option value="Bulanan">Bulanan (The Last 30 Day)</option>
-            <option value="Tahunan">Tahunan (1 Year Ago)</option>
+            <option value="All Data">All Data</option>
+            <option value="Daily">Daily (Today)</option>
+            <option value="Weekly">Weekly (Last 7 Days)</option>
+            <option value="Monthly">Monthly (This Month)</option>
+            <option value="Yearly">Yearly (This Year)</option>
           </select>
 
           <button
             onClick={() => window.print()}
             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-blue-700"
           >
-            <Printer size={15} /> Print/ PDF
+            <Printer size={15} /> Print / PDF
           </button>
         </div>
       </div>
 
-      {/* CARD STATISTIK LAPORAN */}
+      {/* REPORT STATISTIC CARDS */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-slate-500">Total Revene</p>
+            <p className="text-xs font-medium text-slate-500">Total Revenue</p>
             <div className="rounded-lg bg-emerald-50 p-1.5 text-emerald-600">
               <TrendingUp size={16} />
             </div>
@@ -206,7 +217,7 @@ export default function AdminLaporan({
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-slate-500">Total Reservation</p>
+            <p className="text-xs font-medium text-slate-500">Total Reservations</p>
             <div className="rounded-lg bg-slate-50 p-1.5 text-slate-600">
               <Calendar size={16} />
             </div>
@@ -214,12 +225,12 @@ export default function AdminLaporan({
           <h2 className="mt-2 text-2xl font-bold text-slate-900">
             {computedFilteredReservations.length}
           </h2>
-          <span className="text-[11px] text-slate-400">During The Periode: {reportPeriod}</span>
+          <span className="text-[11px] text-slate-400">Period: {reportPeriod}</span>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-slate-500">Reservation Confirmed</p>
+            <p className="text-xs font-medium text-slate-500">Confirmed Reservations</p>
             <div className="rounded-lg bg-blue-50 p-1.5 text-blue-600">
               <CheckCircle2 size={16} />
             </div>
@@ -232,7 +243,7 @@ export default function AdminLaporan({
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-slate-500">Reservation Cancelled</p>
+            <p className="text-xs font-medium text-slate-500">Cancelled Reservations</p>
             <div className="rounded-lg bg-red-50 p-1.5 text-red-600">
               <XCircle size={16} />
             </div>
@@ -240,21 +251,23 @@ export default function AdminLaporan({
           <h2 className="mt-2 text-2xl font-bold text-red-600">
             {cancelledCount}
           </h2>
-          <span className="text-[11px] text-slate-400">During periode: {reportPeriod}</span>
+          <span className="text-[11px] text-slate-400">Period: {reportPeriod}</span>
         </div>
       </div>
 
-      {/* TABEL REKAP TRANSAKSI LAPORAN */}
+      {/* TRANSACTION SUMMARY TABLE */}
       <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h4 className="mb-4 text-sm font-semibold text-slate-900">Incoming Transaction Details</h4>
+        <h4 className="mb-4 text-sm font-semibold text-slate-900">
+          Incoming Transaction Details
+        </h4>
         <table className="w-full text-left text-sm text-slate-600">
           <thead className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase text-slate-500">
             <tr>
-              <th className="px-4 py-3">ID RESERVASI</th>
-              <th className="px-4 py-3">NAMA TAMU</th>
-              <th className="px-4 py-3">KAMAR</th>
-              <th className="px-4 py-3">TOTAL BIAYA</th>
-              <th className="px-4 py-3">STATUS VERIFIKASI</th>
+              <th className="px-4 py-3">RESERVATION ID</th>
+              <th className="px-4 py-3">GUEST NAME</th>
+              <th className="px-4 py-3">ROOM</th>
+              <th className="px-4 py-3">TOTAL AMOUNT</th>
+              <th className="px-4 py-3">VERIFICATION STATUS</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -273,13 +286,15 @@ export default function AdminLaporan({
             ) : (
               computedFilteredReservations.map((item) => {
                 const resId = item.id_reservasi || item.id;
-                const guest = item.nama_lengkap || item.nama_tamu || `Tamu #${item.id_tamu || ""}`;
+                const guest =
+                  item.nama_lengkap || item.nama_tamu || `Guest #${item.id_tamu || ""}`;
                 const roomInfo = item.nomor_kamar
-                  ? `${item.nama_tipe || "Kamar"} (${item.nomor_kamar})`
+                  ? `${item.nama_tipe || "Room"} (${item.nomor_kamar})`
                   : item.id_kamar
-                    ? `Kamar #${item.id_kamar}`
+                    ? `Room #${item.id_kamar}`
                     : "-";
-                const statusVerif = item.status_verifikasi || item.status_pembayaran || "pending";
+                const statusVerif =
+                  item.status_verifikasi || item.status_pembayaran || "pending";
 
                 return (
                   <tr key={resId} className="hover:bg-slate-50">
@@ -291,12 +306,13 @@ export default function AdminLaporan({
                     </td>
                     <td className="px-4 py-3">
                       <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${["verified", "lunas", "terverifikasi"].includes(
-                          String(statusVerif).toLowerCase()
-                        )
+                        className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
+                          ["verified", "lunas", "terverifikasi"].includes(
+                            String(statusVerif).toLowerCase()
+                          )
                             ? "bg-emerald-50 text-emerald-600"
                             : "bg-amber-50 text-amber-600"
-                          }`}
+                        }`}
                       >
                         {statusVerif}
                       </span>

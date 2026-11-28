@@ -17,7 +17,7 @@ export default function AdminReservasi({ filtered, getStatusBadgeClass }) {
     setAlertConfig({ isOpen: true, title, message, type });
   };
 
-  // 1. Fetch data reservasi dari MySQL via Backend
+  // 1. Fetch reservation data from MySQL via Backend
   useEffect(() => {
     fetchReservations();
   }, []);
@@ -27,7 +27,7 @@ export default function AdminReservasi({ filtered, getStatusBadgeClass }) {
       setLoading(true);
       const res = await BookingServices.getAllBookings();
 
-      // Memastikan data berupa Array dan mengurutkan ID dari 1 ke seterusnya (ASC)
+      // Ensure data is an Array and sort IDs ascending (1 to latest)
       const list = Array.isArray(res) ? res : (res?.data || res?.reservations || []);
       const sortedList = [...list].sort(
         (a, b) => Number(a.id_reservasi || a.id) - Number(b.id_reservasi || b.id)
@@ -35,21 +35,21 @@ export default function AdminReservasi({ filtered, getStatusBadgeClass }) {
 
       setReservationData(sortedList);
     } catch (error) {
-      console.error("Gagal mengambil data reservasi:", error);
+      console.error("Failed to fetch reservation data:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  // 2. Update status reservasi ke Database Backend
+  // 2. Update reservation status in Backend Database
   const updateReservation = async (id_reservasi, field, value) => {
     if (!id_reservasi) {
-      showAlert("Data Tidak Valid!", "ID Reservasi tidak ditemukan.", "error");
+      showAlert("Invalid Data!", "Reservation ID not found.", "error");
       return;
     }
 
     try {
-      // Update UI secara lokal terlebih dahulu agar UX terasa responsif
+      // Optimistically update UI locally for responsive UX
       setReservationData((prevData) =>
         prevData.map((item) =>
           (item.id_reservasi || item.id) === id_reservasi
@@ -58,33 +58,32 @@ export default function AdminReservasi({ filtered, getStatusBadgeClass }) {
         )
       );
 
-      // Kirim request update ke Database Backend via BookingServices
+      // Send update request to Backend Database via BookingServices
       await BookingServices.updateBookingStatus(id_reservasi, value);
 
       showAlert(
-        "Status Diperbarui!",
-        `Status reservasi #${id_reservasi} berhasil diubah menjadi '${value}'.`,
+        "Status Updated!",
+        `Reservation #${id_reservasi} status has been changed to '${value}'.`,
         "success"
       );
     } catch (error) {
-      console.error("Gagal memperbarui status ke database:", error);
+      console.error("Failed to update status in database:", error);
       showAlert(
-        "Gagal Memperbarui!",
-        error.message || "Gagal menyimpan perubahan status reservasi ke database.",
+        "Update Failed!",
+        error.message || "Failed to save reservation status changes to the database.",
         "error"
       );
-      // Rollback ke data asli dari backend jika API gagal
+      // Rollback to original data from backend if API fails
       fetchReservations();
     }
   };
 
   if (loading) return <div className="p-6 text-center text-slate-500">Loading reservation data...</div>;
 
-  const dataList = filtered(reservationData, ["id_reservasi", "nama_lengkap", "nama_tipe", "status_reservasi"]);
+  const dataList = filtered(reservationData, ["id_reservasi", "nama_lengkap", "nama_tamu", "nama_tipe", "status_reservasi"]);
 
   return (
     <div className="space-y-5 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
-      {/* Komponen Notifikasi CustomAlert */}
       <CustomAlert
         isOpen={alertConfig.isOpen}
         title={alertConfig.title}
@@ -94,21 +93,21 @@ export default function AdminReservasi({ filtered, getStatusBadgeClass }) {
       />
 
       <div>
-        <h3 className="text-base font-semibold text-slate-900">Daftar Reservasi</h3>
-        <p className="text-xs text-slate-500">Check incoming reservations from the guest booking page.</p>
+        <h3 className="text-base font-semibold text-slate-900">Reservation List</h3>
+        <p className="text-xs text-slate-500">Check and manage incoming reservations from the guest booking page.</p>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm text-slate-600">
           <thead className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase text-slate-500">
             <tr>
-              <th className="px-4 py-3">ID RESERVASI</th>
-              <th className="px-4 py-3">NAMA TAMU</th>
-              <th className="px-4 py-3">KAMAR</th>
-              <th className="px-4 py-3">CHECK_IN</th>
-              <th className="px-4 py-3">CHECK_OUT</th>
-              <th className="px-4 py-3">STATUS RESERVASI</th>
-              <th className="px-4 py-3">PEMBAYARAN</th>
+              <th className="px-4 py-3">RESERVATION ID</th>
+              <th className="px-4 py-3">GUEST NAME</th>
+              <th className="px-4 py-3">ROOM</th>
+              <th className="px-4 py-3">CHECK-IN</th>
+              <th className="px-4 py-3">CHECK-OUT</th>
+              <th className="px-4 py-3">RESERVATION STATUS</th>
+              <th className="px-4 py-3">PAYMENT</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -122,10 +121,10 @@ export default function AdminReservasi({ filtered, getStatusBadgeClass }) {
               dataList.map((item) => {
                 const resId = item.id_reservasi || item.id;
                 const currentStatus = item.status_reservasi || item.status || 'pending';
-                const guestName = item.nama_lengkap || item.id_tamu || item.guest || 'Tamu';
-                const roomType = item.nama_tipe || item.tipe_kamar || `Tipe #${item.id_kamar}`;
-                const checkIn = item.tanggal_check_in || item.checkin || '-';
-                const checkOut = item.tanggal_check_out || item.checkout || '-';
+                const guestName = item.nama_lengkap || item.nama_tamu || item.guest || `Guest #${item.id_tamu || resId}`;
+                const roomType = item.nama_tipe || item.tipe_kamar || `Type #${item.id_kamar}`;
+                const checkIn = String(item.tanggal_check_in || item.checkin || '-').slice(0, 10);
+                const checkOut = String(item.tanggal_check_out || item.checkout || '-').slice(0, 10);
 
                 return (
                   <tr key={resId} className="hover:bg-slate-50">
