@@ -218,7 +218,11 @@ export default function RoomDetail() {
               to="/"
               className="py-4 px-1 text-sm font-semibold text-gray-500 hover:text-blue-600 whitespace-nowrap transition-all duration-200 flex items-center gap-1.5 border-b-2 border-transparent hover:border-blue-600"
             >
+<<<<<<< HEAD
               ← Beranda
+=======
+              ← Home
+>>>>>>> origin/master
             </Link>
             <div className="h-4 w-[1px] bg-gray-300 flex-shrink-0" />
             {Object.entries(hotelRooms).map(([key, room]) => (
@@ -256,7 +260,11 @@ export default function RoomDetail() {
                     ★ {roomData.rating?.toFixed(1) || '5.0'}
                   </span>
                   <span className="text-gray-400 text-xs">
+<<<<<<< HEAD
                     ({roomData.reviewsCount || 0} Ulasan Tamu)
+=======
+                    ({roomData.reviewsCount || 0} Review)
+>>>>>>> origin/master
                   </span>
                 </div>
               </div>

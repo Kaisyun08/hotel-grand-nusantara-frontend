@@ -106,19 +106,19 @@ export default function BookingForm({
 
         <div>
           <label htmlFor="bed" className="block text-xs font-semibold text-gray-600 mb-1">
-            Select Bed            
+            Select Bed
           </label>
-          <select 
-          id="bed"
-          value={bed}
-          onChange={(e) => onBedChange(e.target.value)}
-          className='w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white'
+          <select
+            id="bed"
+            value={bed}
+            onChange={(e) => onBedChange(e.target.value)}
+            className='w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white'
           >
             <option value="king">Single Bed</option>
             <option value="twin">Twin Bed</option>
           </select>
         </div>
-            
+
         {/* KOTAK METODE PEMBAYARAN */}
         <div>
           <label htmlFor="paymentMethod" className="block text-xs font-semibold text-gray-600 mb-1">
@@ -138,7 +138,7 @@ export default function BookingForm({
         {/* STATUS KETERSEDIAAN DARI BACKEND */}
         {isChecking && (
           <p className="text-xs text-amber-600 animate-pulse font-medium">
-            Mengecek ketersediaan kamar...
+            Checking room availability...
           </p>
         )}
 
@@ -147,12 +147,12 @@ export default function BookingForm({
           <div className="border-t border-gray-100 pt-4 text-sm space-y-2 bg-slate-50 p-3 rounded-xl">
             <div className="flex justify-between text-gray-600 text-xs">
               <span>
-                {formatIDR(currentRoom.price)} × {nights} malam
+                {formatIDR(currentRoom.price)} × {nights} night
               </span>
               <span>{formatIDR(total)}</span>
             </div>
             <div className="flex justify-between font-bold text-gray-900 border-t border-gray-200 pt-2 text-base">
-              <span>Total Biaya</span>
+              <span>Total Cost</span>
               <span className="text-amber-600">{formatIDR(total)}</span>
             </div>
           </div>
@@ -163,7 +163,7 @@ export default function BookingForm({
           type="submit"
           className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-xl shadow-md transition-colors"
         >
-          Pesan Sekarang
+          Book Now
         </button>
       </form>
     </aside>

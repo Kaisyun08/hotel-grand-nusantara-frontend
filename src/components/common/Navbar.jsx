@@ -73,6 +73,7 @@ export default function Navbar() {
           {/* NAVIGATION LINKS (DESKTOP) */}
           <div className="hidden gap-8 text-sm font-semibold text-gray-600 md:flex">
             <a href="#" className="text-blue-600 transition hover:text-blue-700">
+<<<<<<< HEAD
               Beranda
             </a>
             <a href="#kamar" className="transition hover:text-blue-600">
@@ -83,6 +84,18 @@ export default function Navbar() {
             </Link>
             <Link to="/room-list" className="transition hover:text-blue-600">
               List Kamar
+=======
+              Home
+            </a>
+            <a href="#kamar" className="transition hover:text-blue-600">
+              Room
+            </a>
+            <Link to="/room-detail" className="transition hover:text-blue-600">
+              Room Detail
+            </Link>
+            <Link to="/room-list" className="transition hover:text-blue-600">
+              Room List
+>>>>>>> origin/master
             </Link>
           </div>
 
@@ -94,16 +107,27 @@ export default function Navbar() {
                   to="/my-bookings"
                   className="text-sm font-medium text-gray-600 hover:text-blue-600"
                 >
+<<<<<<< HEAD
                   Pesanan Saya
                 </Link>
                 <span className="text-sm font-medium text-gray-600">
                   Halo, <strong className="capitalize text-gray-900">{user.nama || user.name || "Tamu"}</strong>
+=======
+                  
+                </Link>
+                <span className="text-sm font-medium text-gray-600">
+                  Hello, <strong className="capitalize text-gray-900">{user.nama || user.name || "Tamu"}</strong>
+>>>>>>> origin/master
                 </span>
                 <button
                   onClick={handleLogout}
                   className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-100"
                 >
+<<<<<<< HEAD
                   Keluar
+=======
+                  Sign Out
+>>>>>>> origin/master
                 </button>
               </>
             ) : (
@@ -112,13 +136,21 @@ export default function Navbar() {
                   to="/login"
                   className="rounded-lg px-4 py-2 text-xs font-semibold text-gray-700 hover:text-blue-600"
                 >
+<<<<<<< HEAD
                   Masuk
+=======
+                  Sign In
+>>>>>>> origin/master
                 </Link>
                 <Link
                   to="/register"
                   className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-md hover:bg-blue-700"
                 >
+<<<<<<< HEAD
                   Daftar
+=======
+                  Register
+>>>>>>> origin/master
                 </Link>
               </div>
             )}
@@ -142,35 +174,55 @@ export default function Navbar() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-blue-600 transition hover:text-blue-700"
               >
+<<<<<<< HEAD
                 Beranda
+=======
+                Home
+>>>>>>> origin/master
               </a>
               <a
                 href="#kamar"
                 onClick={() => setMobileMenuOpen(false)}
                 className="transition hover:text-blue-600"
               >
+<<<<<<< HEAD
                 Kamar
+=======
+                Room
+>>>>>>> origin/master
               </a>
               <Link
                 to="/room-detail"
                 onClick={() => setMobileMenuOpen(false)}
                 className="transition hover:text-blue-600"
               >
+<<<<<<< HEAD
                 Detail Kamar
+=======
+                Room Detail
+>>>>>>> origin/master
               </Link>
               <a
                 href="#fasilitas"
                 onClick={() => setMobileMenuOpen(false)}
                 className="transition hover:text-blue-600"
               >
+<<<<<<< HEAD
                 Fasilitas
+=======
+                Facility
+>>>>>>> origin/master
               </a>
               <a
                 href="#kontak"
                 onClick={() => setMobileMenuOpen(false)}
                 className="transition hover:text-blue-600"
               >
+<<<<<<< HEAD
                 Kontak
+=======
+                Contact
+>>>>>>> origin/master
               </a>
             </div>
 
@@ -183,7 +235,11 @@ export default function Navbar() {
                   <div className="flex items-center gap-2 text-sm text-gray-700">
                     <User size={18} className="text-blue-600" />
                     <span>
+<<<<<<< HEAD
                       Halo, <strong className="capitalize text-gray-900">{user.nama || user.name || "Tamu"}</strong>
+=======
+                      Hello, <strong className="capitalize text-gray-900">{user.nama || user.name || "Tamu"}</strong>
+>>>>>>> origin/master
                     </span>
                   </div>
                   <Link
@@ -191,14 +247,22 @@ export default function Navbar() {
                     onClick={() => setMobileMenuOpen(false)}
                     className="block text-sm font-medium text-gray-600 hover:text-blue-600"
                   >
+<<<<<<< HEAD
                     Pesanan Saya
+=======
+                    My Reservation
+>>>>>>> origin/master
                   </Link>
                   <button
                     onClick={handleLogout}
                     className="flex w-full items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 py-2.5 text-xs font-semibold text-red-600"
                   >
                     <LogOut size={16} />
+<<<<<<< HEAD
                     Keluar
+=======
+                    Sign Out
+>>>>>>> origin/master
                   </button>
                 </div>
               ) : (
@@ -208,14 +272,22 @@ export default function Navbar() {
                     onClick={() => setMobileMenuOpen(false)}
                     className="w-full rounded-lg border border-gray-200 py-2.5 text-center text-xs font-semibold text-gray-700"
                   >
+<<<<<<< HEAD
                     Masuk
+=======
+                    Sign In
+>>>>>>> origin/master
                   </Link>
                   <Link
                     to="/register"
                     onClick={() => setMobileMenuOpen(false)}
                     className="w-full rounded-lg bg-blue-600 py-2.5 text-center text-xs font-semibold text-white shadow-md"
                   >
+<<<<<<< HEAD
                     Daftar
+=======
+                    Register
+>>>>>>> origin/master
                   </Link>
                 </div>
               )}

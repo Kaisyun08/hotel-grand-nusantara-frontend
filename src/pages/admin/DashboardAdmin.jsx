@@ -210,7 +210,11 @@ export default function DashboardAdmin() {
     {
       title: "Total Reservasi",
       value: reservations.length.toString(),
+<<<<<<< HEAD
       description: "Total pesanan masuk",
+=======
+      description: "Total Incoming Orders",
+>>>>>>> origin/master
       icon: CalendarCheck,
       color: "bg-purple-50 text-purple-600",
       change: `${periodFilteredReservations.length} baru`,

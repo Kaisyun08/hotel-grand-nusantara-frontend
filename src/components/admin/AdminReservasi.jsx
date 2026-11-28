@@ -78,7 +78,11 @@ export default function AdminReservasi({ filtered, getStatusBadgeClass }) {
     }
   };
 
+<<<<<<< HEAD
   if (loading) return <div className="p-6 text-center text-slate-500">Memuat data reservasi...</div>;
+=======
+  if (loading) return <div className="p-6 text-center text-slate-500">Loading reservation data...</div>;
+>>>>>>> origin/master
 
   const dataList = filtered(reservationData, ["id_reservasi", "nama_lengkap", "nama_tipe", "status_reservasi"]);
 
@@ -95,7 +99,11 @@ export default function AdminReservasi({ filtered, getStatusBadgeClass }) {
 
       <div>
         <h3 className="text-base font-semibold text-slate-900">Daftar Reservasi</h3>
+<<<<<<< HEAD
         <p className="text-xs text-slate-500">Periksa reservasi yang masuk dari halaman pemesanan tamu.</p>
+=======
+        <p className="text-xs text-slate-500">Check incoming reservations from the guest booking page.</p>
+>>>>>>> origin/master
       </div>
 
       <div className="overflow-x-auto">
@@ -115,7 +123,11 @@ export default function AdminReservasi({ filtered, getStatusBadgeClass }) {
             {dataList.length === 0 ? (
               <tr>
                 <td colSpan="7" className="px-4 py-6 text-center text-xs text-slate-400">
+<<<<<<< HEAD
                   Belum ada data reservasi di database.
+=======
+                  There are no reservation records in the database.
+>>>>>>> origin/master
                 </td>
               </tr>
             ) : (

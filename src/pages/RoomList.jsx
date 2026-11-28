@@ -110,24 +110,14 @@ export default function RoomList() {
                     {/* MENU DESKTOP */}
                     <div className="hidden gap-8 text-sm font-semibold text-gray-600 md:flex">
                         <Link to="/" className="transition hover:text-blue-600">
-                            Beranda
+                            Home
                         </Link>
                         <Link to="/room-list" className="text-blue-600 font-bold transition hover:text-blue-700">
-                            Kamar
+                            Room
                         </Link>
                         <Link to="/room-detail" className="transition hover:text-blue-600">
-                            Detail Kamar
+                           Room Detail
                         </Link>
-                    </div>
-                    {/* SEARCH BAR */}
-                    <div className="mt-6 max-w-md mx-auto">
-                        <input
-                            type="text"
-                            placeholder="Cari tipe kamar..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-md"
-                        />
                     </div>
 
                     {/* PROFIL / LOGIN */}
@@ -135,25 +125,25 @@ export default function RoomList() {
                         {user ? (
                             <>
                                 <Link to="/my-bookings" className="text-sm font-semibold text-gray-600 hover:text-blue-600">
-                                    Pesanan Saya
+                                    My Reservation
                                 </Link>
                                 <span className="text-sm font-medium text-gray-600">
-                                    Halo, <strong className="capitalize text-gray-900">{user.nama || user.name || 'Tamu'}</strong>
+                                    Hello, <strong className="capitalize text-gray-900">{user.nama || user.name || 'Tamu'}</strong>
                                 </span>
                                 <button
                                     onClick={handleLogout}
                                     className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-100"
                                 >
-                                    Keluar
+                                    Logout
                                 </button>
                             </>
                         ) : (
                             <div className="flex gap-2">
                                 <Link to="/login" className="rounded-lg px-4 py-2 text-xs font-semibold text-gray-700 hover:text-blue-600">
-                                    Masuk
+                                    Login
                                 </Link>
                                 <Link to="/register" className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-md hover:bg-blue-700">
-                                    Daftar
+                                    Register
                                 </Link>
                             </div>
                         )}
@@ -172,21 +162,21 @@ export default function RoomList() {
                 {mobileMenuOpen && (
                     <div className="border-b border-gray-100 bg-white px-6 py-4 space-y-4 md:hidden shadow-lg">
                         <div className="flex flex-col space-y-3 text-sm font-semibold text-gray-600">
-                            <Link to="/" className="transition hover:text-blue-600">Beranda</Link>
+                            <Link to="/" className="transition hover:text-blue-600">Home</Link>
                             <Link to="/room-list" className="text-blue-600">Kamar</Link>
-                            <Link to="/room-detail" className="transition hover:text-blue-600">Detail Kamar</Link>
+                            <Link to="/room-detail" className="transition hover:text-blue-600">Room Detail</Link>
                         </div>
                         <hr className="border-gray-100" />
                         <div className="pt-2">
                             {user ? (
                                 <div className="space-y-3">
-                                    <Link to="/my-bookings" className="block text-sm font-semibold text-gray-600">Pesanan Saya</Link>
+                                    <Link to="/my-bookings" className="block text-sm font-semibold text-gray-600">My Reservation</Link>
                                     <button onClick={handleLogout} className="w-full rounded-lg border border-red-200 bg-red-50 py-2 text-xs font-semibold text-red-600">Keluar</button>
                                 </div>
                             ) : (
                                 <div className="flex flex-col gap-2">
-                                    <Link to="/login" className="text-center rounded-lg border py-2 text-xs font-semibold">Masuk</Link>
-                                    <Link to="/register" className="text-center rounded-lg bg-blue-600 py-2 text-xs font-semibold text-white">Daftar</Link>
+                                    <Link to="/login" className="text-center rounded-lg border py-2 text-xs font-semibold">Login</Link>
+                                    <Link to="/register" className="text-center rounded-lg bg-blue-600 py-2 text-xs font-semibold text-white">Register</Link>
                                 </div>
                             )}
                         </div>
@@ -200,18 +190,29 @@ export default function RoomList() {
                     Grand Nusantara Hotel
                 </span>
                 <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">
-                    Semua Pilihan Kamar & Suite
+                    All Room & Suite Options
                 </h1>
                 <p className="mt-2 text-sm text-slate-300 max-w-xl mx-auto">
-                    Temukan akomodasi terbaik yang dirancang untuk kenyamanan dan pengalaman istirahat istimewa Anda.
+                    Find the best accommodations designed for your comfort and a truly special stay.
                 </p>
+
+                {/* SEARCH BAR */}
+                <div className="mt-6 max-w-md mx-auto">
+                    <input
+                        type="text"
+                        placeholder="Cari tipe kamar..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-md"
+                    />
+                </div>
             </div>
 
             {/* ROOM LIST GRID */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1 w-full">
                 {filteredRooms.length === 0 ? (
                     <div className="text-center py-12 text-gray-500">
-                        Kamar yang Anda cari tidak ditemukan.
+                        The room you're looking for was not found.
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -241,17 +242,17 @@ export default function RoomList() {
 
                                 <div className="px-6 pb-6 pt-2 flex items-center justify-between border-t border-gray-50">
                                     <div>
-                                        <span className="text-xs text-gray-400 block">Mulai dari</span>
+                                        <span className="text-xs text-gray-400 block">Start From</span>
                                         <span className="text-lg font-bold text-amber-600">
                                             {formatIDR(room.price)}
                                         </span>
-                                        <span className="text-xs text-gray-400"> /malam</span>
+                                        <span className="text-xs text-gray-400"> /Night</span>
                                     </div>
                                     <button
                                         onClick={() => handleSelectRoom(room.key)}
                                         className="rounded-xl bg-slate-900 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-amber-600 shadow-md"
                                     >
-                                        Lihat Detail
+                                        See Detail
                                     </button>
                                 </div>
                             </div>

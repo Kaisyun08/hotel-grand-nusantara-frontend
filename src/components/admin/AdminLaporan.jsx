@@ -164,8 +164,8 @@ export default function AdminLaporan({
       {/* HEADER & FILTER PERIODE */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h3 className="text-base font-semibold text-slate-900">Ringkasan Laporan Hotel</h3>
-          <p className="text-xs text-slate-500">Rekap aktivitas reservasi dan pendapatan hotel dari database.</p>
+          <h3 className="text-base font-semibold text-slate-900">Hotel Report Summary</h3>
+          <p className="text-xs text-slate-500">Summary of hotel reservations and revenue from the database.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <select
@@ -173,18 +173,18 @@ export default function AdminLaporan({
             onChange={(e) => setReportPeriod(e.target.value)}
             className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 outline-none focus:border-blue-500"
           >
-            <option value="Semua Data">Semua Data</option>
-            <option value="Harian">Harian (1 Hari Terakhir)</option>
-            <option value="Mingguan">Mingguan (7 Hari Terakhir)</option>
-            <option value="Bulanan">Bulanan (30 Hari Terakhir)</option>
-            <option value="Tahunan">Tahunan (1 Tahun Terakhir)</option>
+            <option value="Semua Data">Data</option>
+            <option value="Harian">Daily (The Last Day)</option>
+            <option value="Mingguan">Weekly (The Last 7 Day)</option>
+            <option value="Bulanan">Bulanan (The Last 30 Day)</option>
+            <option value="Tahunan">Tahunan (1 Year Ago)</option>
           </select>
 
           <button
             onClick={() => window.print()}
             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-blue-700"
           >
-            <Printer size={15} /> Cetak / PDF
+            <Printer size={15} /> Print/ PDF
           </button>
         </div>
       </div>
@@ -193,7 +193,7 @@ export default function AdminLaporan({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-slate-500">Total Pendapatan</p>
+            <p className="text-xs font-medium text-slate-500">Total Revene</p>
             <div className="rounded-lg bg-emerald-50 p-1.5 text-emerald-600">
               <TrendingUp size={16} />
             </div>
@@ -201,12 +201,12 @@ export default function AdminLaporan({
           <h2 className="mt-2 text-xl font-bold text-emerald-600">
             {renderRupiah(totalRevenue)}
           </h2>
-          <span className="text-[11px] text-slate-400">Pembayaran status verified</span>
+          <span className="text-[11px] text-slate-400">Payment status verified</span>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-slate-500">Total Reservasi</p>
+            <p className="text-xs font-medium text-slate-500">Total Reservation</p>
             <div className="rounded-lg bg-slate-50 p-1.5 text-slate-600">
               <Calendar size={16} />
             </div>
@@ -214,12 +214,12 @@ export default function AdminLaporan({
           <h2 className="mt-2 text-2xl font-bold text-slate-900">
             {computedFilteredReservations.length}
           </h2>
-          <span className="text-[11px] text-slate-400">Dalam periode: {reportPeriod}</span>
+          <span className="text-[11px] text-slate-400">During The Periode: {reportPeriod}</span>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-slate-500">Reservasi Dikonfirmasi</p>
+            <p className="text-xs font-medium text-slate-500">Reservation Confirmed</p>
             <div className="rounded-lg bg-blue-50 p-1.5 text-blue-600">
               <CheckCircle2 size={16} />
             </div>
@@ -227,12 +227,12 @@ export default function AdminLaporan({
           <h2 className="mt-2 text-2xl font-bold text-blue-600">
             {confirmedCount}
           </h2>
-          <span className="text-[11px] text-slate-400">Termasuk check_in & check_out</span>
+          <span className="text-[11px] text-slate-400">Includes check-in and check-out</span>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-slate-500">Reservasi Cancelled</p>
+            <p className="text-xs font-medium text-slate-500">Reservation Cancelled</p>
             <div className="rounded-lg bg-red-50 p-1.5 text-red-600">
               <XCircle size={16} />
             </div>
@@ -240,13 +240,13 @@ export default function AdminLaporan({
           <h2 className="mt-2 text-2xl font-bold text-red-600">
             {cancelledCount}
           </h2>
-          <span className="text-[11px] text-slate-400">Dalam periode: {reportPeriod}</span>
+          <span className="text-[11px] text-slate-400">During periode: {reportPeriod}</span>
         </div>
       </div>
 
       {/* TABEL REKAP TRANSAKSI LAPORAN */}
       <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h4 className="mb-4 text-sm font-semibold text-slate-900">Rincian Transaksi Masuk</h4>
+        <h4 className="mb-4 text-sm font-semibold text-slate-900">Incoming Transaction Details</h4>
         <table className="w-full text-left text-sm text-slate-600">
           <thead className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase text-slate-500">
             <tr>
@@ -261,13 +261,13 @@ export default function AdminLaporan({
             {loading && computedFilteredReservations.length === 0 ? (
               <tr>
                 <td colSpan="5" className="px-4 py-6 text-center text-xs text-slate-400">
-                  Memuat data laporan dari server...
+                  Loading report data from the server...
                 </td>
               </tr>
             ) : computedFilteredReservations.length === 0 ? (
               <tr>
                 <td colSpan="5" className="px-4 py-6 text-center text-xs text-slate-400">
-                  Tidak ada data reservasi pada periode ini.
+                  There are no reservation records for this period.
                 </td>
               </tr>
             ) : (
